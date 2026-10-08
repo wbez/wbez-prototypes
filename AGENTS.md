@@ -75,6 +75,13 @@ Prefer these before writing new markup:
 - Prefer kicker → headline → dek → metadata → body hierarchy for stories.
 - Prefer real editorial modules such as pull quotes, figures, embeds, and related content blocks over generic cards dropped into article bodies.
 
+## Avoid
+- One-off inline styles unless truly necessary.
+- Novelty UI treatments.
+- Arbitrary colors or spacing scales; use the brand tokens.
+- Deeply nested custom HTML when an existing partial already matches.
+- Hotlinking CDN assets in views when a local asset exists.
+
 ## Hotwire/Turbo rules
 - Keep forms and links Turbo-compatible by default.
 - Prefer Turbo Frames for scoped updates.
@@ -84,6 +91,7 @@ Prefer these before writing new markup:
 ## Demo route rules
 - Demo pages are development-only reference pages.
 - Allowed demo routes include `/demo`, `/demo/home`, `/demo/article`, `/demo/logos`, `/demo/icons`, `/demo/cookbook`, `/demo/cookbook-suntimes`, `/demo/style-guide-wbez`, and `/demo/style-guide-suntimes`.
+- App prototype demos: `/demo/app-wbez` (river / experiments), `/demo/app-wbez/listen`, `/demo/app-wbez/browse`, `/demo/app-wbez/menu`, `/demo/app-suntimes` (river / experiments), `/demo/app-suntimes/home`.
 - Demo routes must never override the app root route.
 
 ## Brand governance rules
@@ -108,5 +116,6 @@ When asked to build a new page:
 - App UI lives under `shared/ui/app/` (neutral), `shared/ui/wbez/app/`, `shared/ui/suntimes/app/`.
 - Layout: `layouts/app.html.erb`. Generators: `wbez:app`, `suntimes:app`.
 - Experiments: view folders under `app/views/<app>/experiments/<variant>/`; register in `config/app_prototype.yml`.
+- Never overwrite `baseline` when adding an experiment variant; add a new folder beside it.
 - **Do not** put feed URLs, credentials, or product-specific IA in shared app UI — keep those in generated apps or `examples/wbez-app-lab`.
 - PWA: `public/service-worker.js`, `/manifest.webmanifest`. See `docs/app-prototype/`.
