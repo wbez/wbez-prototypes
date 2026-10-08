@@ -24,3 +24,13 @@
 /examples/wbez-app-lab/node_modules
 /examples/wbez-app-lab/app/assets/builds/*
 !/examples/wbez-app-lab/app/assets/builds/.keep
+
+# Listening Companion prototype: plan, reference files, recordings, feed snapshot
+PROTOTYPE_PLAN.md
+/docs/wbez-app-prototype.html
+/docs/wbez-app-prototype-zoom.html
+/docs/wbez-app-ux-working-doc.md
+/docs/wireframes
+/wbez-recordings/
+/public/audio
+/data/rss/
