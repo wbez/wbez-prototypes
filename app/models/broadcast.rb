@@ -67,23 +67,6 @@ class Broadcast
       seconds.clamp(airings.first.start, audio_end - 10)
     end
 
-    # Transcript lines containing the query that have aired by `before`, newest first.
-    def search(query, before:, limit: 40)
-      needle = query.to_s.strip.downcase
-      return [] if needle.empty?
-
-      hits = []
-      recorded.each do |airing|
-        airing.segments.each do |segment|
-          segment.lines.each do |line|
-            next if line.start > before
-            hits << { airing: airing, segment: segment, line: line } if line.text.downcase.include?(needle)
-          end
-        end
-      end
-      hits.sort_by { |hit| -hit[:line].start }.first(limit)
-    end
-
     # What the client needs to run the clock and the player.
     def as_client_json
       {

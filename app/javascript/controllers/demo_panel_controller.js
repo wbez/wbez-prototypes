@@ -39,12 +39,32 @@ export default class extends Controller {
     let current = "a"
     try {
       if (requested === "a" || requested === "b") localStorage.setItem(VARIANT_KEY, requested)
-      else if (rendered) localStorage.setItem(VARIANT_KEY, rendered)
-      current = localStorage.getItem(VARIANT_KEY) || "a"
+      const stored = localStorage.getItem(VARIANT_KEY)
+      // A static export has no server to remember the choice, so the Listen
+      // tab always points at A. Send people who picked B back to it.
+      if (this.isStatic && rendered && stored && stored !== rendered) {
+        const other = this.variantTargets.find((link) => link.dataset.variant === stored)
+        if (other) return window.Turbo.visit(other.href, { action: "replace" })
+      }
+      if (rendered && !stored) localStorage.setItem(VARIANT_KEY, rendered)
+      current = rendered || stored || "a"
     } catch {
       current = rendered || "a"
     }
     this.variantTargets.forEach((link) => link.classList.toggle("is-on", link.dataset.variant === current))
+  }
+
+  // Choosing a variant in the panel.
+  pickVariant(event) {
+    try {
+      localStorage.setItem(VARIANT_KEY, event.currentTarget.dataset.variant)
+    } catch {
+      // storage unavailable: the link still works
+    }
+  }
+
+  get isStatic() {
+    return this.element.hasAttribute("data-static")
   }
 
   speed(event) {

@@ -18,15 +18,17 @@
 
 <h2>Listen tab</h2>
 <div class="cp-panel__row" role="group" aria-label="Listen variant">
-  <%= link_to "A: chevrons", companion_listen_path(listen: "a"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "a" } %>
-  <%= link_to "B: pinch to zoom", companion_listen_path(listen: "b"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "b" } %>
+  <%= link_to "A: chevrons", companion_listen_path(listen: "a"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "a", action: "demo-panel#pickVariant" } %>
+  <%= link_to "B: pinch to zoom", companion_listen_path(listen: "b"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "b", action: "demo-panel#pickVariant" } %>
 </div>
 
-<h2>Content</h2>
-<div class="cp-panel__row">
-  <%= link_to "Recorded stream", companion_listen_path(day: nil), class: ["cp-chip", ("is-on" if @day.key == "stream")], data: { turbo: false } %>
-  <%= link_to "Sample content", companion_listen_path(day: "demo"), class: ["cp-chip", ("is-on" if @day.key == "demo")], data: { turbo: false } %>
-</div>
+<% unless static_export? %>
+  <h2>Content</h2>
+  <div class="cp-panel__row">
+    <%= link_to "Recorded stream", companion_listen_path(day: nil), class: ["cp-chip", ("is-on" if @day.key == "stream")], data: { turbo: false } %>
+    <%= link_to "Sample content", companion_listen_path(day: "demo"), class: ["cp-chip", ("is-on" if @day.key == "demo")], data: { turbo: false } %>
+  </div>
+<% end %>
 
 <h2>Try these journeys</h2>
 <% [
@@ -46,4 +48,6 @@
 <h2>Demo controls</h2>
 <button type="button" class="cp-try" data-action="demo-panel#jump"><b>Jump to :58</b><span>Watch the live show hand off to the next one.</span></button>
 <button type="button" class="cp-try" data-action="demo-panel#reset"><b>Reset</b><span>Back to the starting time, nothing playing, queue and saves cleared.</span></button>
-<p class="cp-tiny"><%= link_to "Loader debug page", companion_debug_path, data: { turbo: false } %></p>
+<% unless static_export? %>
+  <p class="cp-tiny"><%= link_to "Loader debug page", companion_debug_path, data: { turbo: false } %></p>
+<% end %>

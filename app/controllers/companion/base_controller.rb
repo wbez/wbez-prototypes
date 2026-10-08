@@ -8,8 +8,14 @@ module Companion
     helper CompanionHelper
 
     before_action :set_day
+    helper_method :static_export?
 
     private
+
+    # True while `bin/rails companion:export` renders the pages to static files.
+    def static_export?
+      request.headers["X-Companion-Export"].present?
+    end
 
     def set_day
       @day = Broadcast.day(params[:day])

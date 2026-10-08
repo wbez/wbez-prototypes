@@ -38,5 +38,6 @@ A mobile-first demo of the WBEZ app as a listening companion, at `/companion` (t
 - **Client:** Stimulus controllers share state through `app/javascript/companion.js`. The player, clock and store sit in a `data-turbo-permanent` root in `layouts/companion`, so audio survives tab changes.
 - **Styles:** `brands/_wbez_companion.scss`, classes prefixed `cp-`, colours from the WBEZ tokens.
 - **Checks:** `/companion/debug` lists what the loaders produced. `docs/recon.md` and `docs/data-notes.md` record what the template and the data looked like going in.
+- **Static export:** `bin/rails 'companion:export[prefix]'` renders the recorded stream to `tmp/companion-export/` for S3 and prints the `aws s3 sync` commands. Search runs in the browser so the export needs no server.
 - **Demo clock:** `?at=HH:MM` and `?speed=1|4|10`. `?listen=a|b` switches the Listen variant.
 

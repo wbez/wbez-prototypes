@@ -18,10 +18,12 @@ Rails.application.routes.draw do
     get "/", to: "listen#show", as: :listen
     get "schedule", to: "schedule#index", as: :schedule
     get "search", to: "search#index", as: :search
+    get "search-index", to: "search#lines", as: :search_index, defaults: { format: :json }
     get "discover", to: "discover#index", as: :discover
     get "library", to: "library#show", as: :library
     get "debug", to: "debug#show", as: :debug
-    get "airings/:id/transcript", to: "airings#transcript", as: :airing_transcript
+    get "airings/:id/:pane.html", to: "airings#transcript", as: :airing_transcript,
+        constraints: { pane: /page|player/ }, format: false
   end
 
 # WBEZ_BOOTSTRAP_DEMO_ROUTES

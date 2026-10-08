@@ -87,7 +87,7 @@
           <p class="cp-zph" data-when="future">The transcript appears here as <%= airing.name %> airs.</p>
           <% unless airing.upcoming? %>
             <div data-when="aired">
-              <%= turbo_frame_tag "transcript-#{airing.id}", src: companion_airing_transcript_path(id: airing.id), loading: "lazy" do %>
+              <%= turbo_frame_tag "transcript-#{airing.id}", src: companion_airing_transcript_path(id: airing.id, pane: "page"), loading: "lazy" do %>
                 <p class="cp-zph">Loading transcript…</p>
               <% end %>
             </div>

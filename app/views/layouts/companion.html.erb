@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#ffffff">
+    <%# A prototype with broadcast audio and transcripts: keep it out of search engines. %>
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -37,7 +39,7 @@
         </nav>
       </div>
 
-      <aside id="cp-panel-<%= @day.key %>" class="cp-panel" data-turbo-permanent data-controller="demo-panel" aria-label="Demo controls">
+      <aside id="cp-panel-<%= @day.key %>" class="cp-panel" data-turbo-permanent data-controller="demo-panel"<%= " data-static" if static_export? %> aria-label="Demo controls">
         <%= render "companion/shared/panel" %>
       </aside>
     </div>

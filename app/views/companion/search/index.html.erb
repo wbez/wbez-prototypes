@@ -1,55 +1,16 @@
 <% content_for :title, "Search" %>
 
-<header class="cp-navbar cp-navbar--search">
-  <%= form_with url: companion_search_path, method: :get, class: "cp-searchbox", role: "search",
-        data: { controller: "search", turbo_frame: "cp-search-results", action: "input->search#queue submit->search#stamp" } do |form| %>
-    <%= ferris_icon "search", size: 18 %>
-    <%= form.search_field :q, value: @query, placeholder: "Search what you heard", autofocus: true, autocomplete: "off",
-          "aria-label": "Search transcripts", data: { search_target: "input" } %>
-    <%= form.hidden_field :at, value: @at, data: { search_target: "at" } %>
-  <% end %>
-  <%= link_to "Cancel", companion_listen_path, class: "cp-small cp-navbar__cancel" %>
-</header>
+<div data-controller="search" data-search-index-url-value="<%= companion_search_index_path %>">
+  <header class="cp-navbar cp-navbar--search">
+    <form class="cp-searchbox" role="search" data-action="submit->search#submit">
+      <%= ferris_icon "search", size: 18 %>
+      <input type="search" name="q" placeholder="Search what you heard" autofocus autocomplete="off"
+             aria-label="Search transcripts" data-search-target="input" data-action="input->search#queue">
+    </form>
+    <%= link_to "Cancel", companion_listen_path, class: "cp-small cp-navbar__cancel" %>
+  </header>
 
-<%= turbo_frame_tag "cp-search-results" do %>
-  <% if @query.blank? %>
+  <div data-search-target="results" aria-live="polite">
     <p class="cp-empty">Search words spoken on air, like a name, a place or a topic.<br><br>Results jump to the exact moment.</p>
-  <% elsif @results.empty? %>
-    <p class="cp-empty">Nothing on air so far matched “<%= @query %>”.<br>Try a different word.</p>
-  <% else %>
-    <p class="cp-tiny cp-results__count"><%= pluralize(@results.size, "moment") %> on air before <%= companion_clock(@at) %><%= ", most recent first" if @results.size > 1 %></p>
-    <% @results.each do |hit| %>
-      <% airing, segment, line = hit.values_at(:airing, :segment, :line) %>
-      <article class="cp-result<%= " cp-result--blocked" unless airing.replayable %>">
-        <div class="cp-result__head">
-          <%= companion_art airing %>
-          <div>
-            <b><%= airing.name %></b>
-            <div class="cp-tiny"><%= segment.title %>, <%= companion_clock(line.start) %></div>
-          </div>
-        </div>
-        <p class="cp-result__quote">“<%= companion_highlight(line.text, @query) %>”</p>
-        <% if airing.replayable %>
-          <div class="cp-result__acts">
-            <button type="button" class="cp-result__play" data-act="seekopen" data-t="<%= line.start %>">
-              <span class="cp-miniplay" aria-hidden="true"><%= ferris_icon "play", size: 12 %></span>Play from here
-            </button>
-            <span class="cp-result__more">
-              <button type="button" class="cp-small" data-act="queue" data-t="<%= line.start %>" data-queue-toggle data-queue-label aria-pressed="false">Add to queue</button>
-              <button type="button" class="cp-small" data-act="saveline" data-t="<%= line.start %>" data-text="<%= line.text %>">Save</button>
-            </span>
-          </div>
-        <% else %>
-          <details class="cp-result__read">
-            <summary><span class="cp-tiny">Not available for replay</span><span class="cp-result__toggle">Read transcript</span></summary>
-            <% segment.lines.each do |other| %>
-              <% next if other.start > @at %>
-              <p class="<%= "is-hit" if other.equal?(line) %>"><%= other.text %></p>
-            <% end %>
-          </details>
-        <% end %>
-      </article>
-    <% end %>
-    <p class="cp-txnote">Transcripts are machine-generated and may contain errors.</p>
-  <% end %>
-<% end %>
+  </div>
+</div>

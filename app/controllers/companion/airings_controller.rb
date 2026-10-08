@@ -6,8 +6,8 @@ module Companion
     # (with its notes) and by Listen variant B at the transcript zoom level.
     def transcript
       @airing = @day.find_airing(params[:id]) or return head(:not_found)
-      @pane = params[:pane] == "player" ? "player" : "page"
-      @frame_id = request.headers["Turbo-Frame"].presence || "transcript-#{@airing.id}"
+      @pane = params[:pane]
+      @frame_id = @pane == "player" ? "cp-player-airing" : "transcript-#{@airing.id}"
       render layout: false
     end
   end

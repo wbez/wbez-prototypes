@@ -49,12 +49,6 @@ module CompanionHelper
     tag.div(airing.short, class: ["cp-art", classes].compact.join(" "), style: "background: #{airing.color}", "aria-hidden": true)
   end
 
-  def companion_highlight(text, query)
-    return h(text) if query.blank?
-
-    h(text).to_str.gsub(/#{Regexp.escape(h(query))}/i) { |match| tag.mark(match.html_safe) }.html_safe
-  end
-
   def companion_tabs
     [
       { id: "listen", label: "Listen", href: companion_listen_path },
