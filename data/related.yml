@@ -1,0 +1,56 @@
+# Related-story overrides for the Listening Companion prototype. Hand-edited.
+#
+# Per day:
+#   pin / block   keyed by segment start time ("HH:MM:SS" local). Lists of
+#                 Sun-Times URLs to force onto, or keep off, that segment.
+#                 `block: ["all"]` keeps every automatic match off a segment.
+#   samples       placeholder stories, not from the feed. Each is attached to
+#                 the first segment whose title matches `segment`, and anchored
+#                 to the first line containing `phrase` (or the segment's
+#                 second line when no phrase is given).
+
+stream:
+  pin: {}
+  block:
+    # "Detroit" in a segment about Manchester's music scene
+    "02:16:04": ["all"]
+
+demo:
+  pin: {}
+  block:
+    # Weak automatic matches (a shared "City Council", "West Town", "City Hall" or "Obama")
+    "08:19:42": ["all"]
+    "08:32:13": ["all"]
+    "09:06:13": ["all"]
+    "09:39:13": ["all"]
+  samples:
+    - segment: "Climate Displacement"
+      phrase: "task force"
+      title: "Sample: Illinois climate task force still has one member a year on"
+    - segment: "Obama Center"
+      title: "Sample: What to see at the Obama Presidential Center"
+    - segment: "Humboldt Village"
+      title: "Sample: Former school to become affordable apartments"
+    - segment: "Public Restroom"
+      title: "Sample: Chicago opens its first self-cleaning public restroom"
+    - segment: "Pedestrian Safety"
+      title: "Sample: New pedestrian beacon planned after intersection redesign"
+    - segment: "Chicago Baseball"
+      show: "In the Loop"
+      phrase: "Cubs"
+      title: "Sample: Cubs and White Sox both playoff-bound"
+    - segment: "City Council"
+      phrase: "parking"
+      title: "Sample: City Council takes up parking meters and renter protections"
+    - segment: "Mayoral Race"
+      title: "Sample: Who is eligible to run for mayor, and who is paying for it"
+    - segment: "Artificial Intelligence"
+      show: "In the Loop"
+      phrase: "data center"
+      title: "Sample: Illinois weighs safety rules for AI and data centers"
+    - segment: "Bears Injuries"
+      phrase: "Eagles"
+      title: "Sample: Bears quarterback questions ahead of the Eagles game"
+    - segment: "Immigration Enforcement"
+      phrase: "Evanston"
+      title: "Sample: U.S. citizen detained in Evanston as enforcement continues"

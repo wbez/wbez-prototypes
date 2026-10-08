@@ -1,0 +1,116 @@
+# Broadcast days for the Listening Companion prototype. Hand-edited.
+#
+# Each airing points at one recording in wbez-recordings/ (<file>.json plus
+# <file>.m4a, or the extension given in `ext`).
+#
+#   name        show name as displayed
+#   short       initials for the artwork tile
+#   color       artwork tile colour (placeholder art, not a brand colour)
+#   aliases     other chapter titles in the JSON that mean this show
+#   replayable  false = audio can't be replayed; transcript stays searchable
+#   start       "HH:MM" local time; only needed when the filename has no timestamp
+#
+# search_word is what the demo panel's "What was that?" shortcut searches for.
+#
+# Filenames carry UTC timestamps; utc_offset converts them to Chicago time.
+
+stream:
+  label: "The stream as recorded"
+  date_label: "Sunday, Sept. 27"
+  search_word: optimism
+  utc_offset: -5
+  airings:
+    - file: wbez_2026-09-27_22-31-38
+      name: How I Built This
+      short: HIBT
+      color: "#b5532d"
+    - file: wbez_2026-09-27_23-00-00
+      name: The New Yorker Radio Hour
+      short: NYRH
+      color: "#2b2b2b"
+      aliases: ["New Yorker Radio Hour"]
+    - file: wbez_2026-09-28_00-00-00
+      name: Hidden Brain
+      short: HB
+      color: "#2f6c8f"
+    - file: wbez_2026-09-28_01-00-00
+      name: This American Life
+      short: TAL
+      color: "#8a2a45"
+    - file: wbez_2026-09-28_02-00-00
+      name: Snap Judgment
+      short: SNAP
+      color: "#4b5a3a"
+    # The replayable flags on the two music hours are illustrative, to show a
+    # rights-restricted show. They are not real rights information.
+    - file: wbez_2026-09-28_03-00-00
+      name: Vocalo Hotline
+      short: VOC
+      color: "#7b4bb0"
+      replayable: false
+    - file: wbez_2026-09-28_04-00-00
+      name: World Cafe
+      short: WC
+      color: "#3a6b4f"
+      aliases: ["Conversations from the World Cafe"]
+      replayable: false
+    - file: wbez_2026-09-28_05-00-00
+      name: BBC Newsday
+      short: BBC
+      color: "#3a3a3a"
+      aliases: ["Newsday", "BBC World Service"]
+    - file: wbez_2026-09-28_06-00-00
+      name: BBC Newsday
+      short: BBC
+      color: "#3a3a3a"
+      aliases: ["Newsday", "BBC World Service"]
+    - file: wbez_2026-09-28_07-00-00
+      name: The History Hour
+      short: HH
+      color: "#5d4a2f"
+      aliases: ["History Hour"]
+  # Shows after the recording ends. Names and times are assumed from the usual
+  # overnight schedule and should be checked.
+  upcoming:
+    - name: BBC World Service
+      short: BBC
+      color: "#3a3a3a"
+      start: "03:00"
+      end: "04:00"
+    - name: Morning Edition
+      short: ME
+      color: "#3768a8"
+      start: "04:00"
+      end: "05:00"
+
+# A composed morning for demonstrating related stories. The two hours are real
+# recordings from different days placed back to back; the related stories come
+# from data/related.yml and are samples.
+demo:
+  label: "Sample content"
+  date_label: "Sample morning"
+  search_word: Obama
+  utc_offset: -5
+  airings:
+    - file: wbez_2026-09-29_13-00-00
+      name: Morning Edition
+      short: ME
+      color: "#3768a8"
+    - file: in_the_loop
+      ext: mp3
+      start: "09:00"
+      name: In the Loop
+      short: ITL
+      color: "#7a4fa0"
+  upcoming:
+    - name: Say More
+      short: SM
+      color: "#c0462e"
+      start: "10:00"
+      end: "11:00"
+      rundown: "Should kids play tackle football? Listeners, school sports officials and a concussion specialist weigh the benefits against the risks of head injuries."
+    - name: Here & Now
+      short: H&N
+      color: "#5a8a3a"
+      start: "11:00"
+      end: "12:00"
