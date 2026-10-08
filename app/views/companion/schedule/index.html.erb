@@ -1,0 +1,40 @@
+<% content_for :title, "Schedule" %>
+
+<%= render "companion/shared/navbar", title: "Schedule" %>
+<p class="cp-daylabel"><%= @day.date_label %></p>
+
+<% @day.airings.each do |airing| %>
+  <section class="cp-block<%= " cp-block--blocked" unless airing.replayable %>" data-show="<%= airing.id %>" data-start="<%= airing.start %>" data-end="<%= airing.end %>">
+    <div class="cp-block__top">
+      <span class="cp-block__time"><%= companion_hour(airing.start) %></span>
+      <h2 class="cp-block__name"><%= airing.name %></h2>
+      <span class="cp-pill cp-pill--dot" data-when="live">Live</span>
+    </div>
+
+    <div class="cp-block__body">
+      <div data-when="future">
+        <% if airing.rundown.present? %>
+          <p class="cp-tiny cp-block__label">Rundown</p>
+          <p class="cp-block__rundown"><%= airing.rundown %></p>
+        <% else %>
+          <p class="cp-small">Rundown not yet posted.</p>
+        <% end %>
+        <button type="button" class="cp-notifybtn" data-act="notify" data-id="<%= airing.id %>" data-name="<%= airing.name %>" data-bell data-bell-label aria-pressed="false">
+          <%= companion_icon "bell" %><span>Notify me when live</span>
+        </button>
+      </div>
+
+      <% unless airing.upcoming? %>
+        <div data-when="aired">
+          <% unless airing.replayable %>
+            <p class="cp-tiny">Not available for replay. The transcript is still searchable.</p>
+          <% end %>
+          <div class="cp-segs" data-nowline-host>
+            <%= render partial: "companion/shared/segment", collection: airing.listed_segments, as: :segment, locals: { airing: airing, summary: true } %>
+          </div>
+          <p class="cp-auto" data-when="past"><%= companion_icon "info" %> Segment titles and summaries generated from the transcript</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>

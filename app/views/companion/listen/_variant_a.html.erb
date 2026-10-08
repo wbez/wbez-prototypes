@@ -1,0 +1,37 @@
+<%# Variant A, "chevrons": the day as a timeline. Aired shows expand into segments. %>
+<div class="cp-timeline" data-variant="a">
+  <% @day.airings.each do |airing| %>
+    <div class="cp-show<%= " cp-show--blocked" unless airing.replayable %>" data-show="<%= airing.id %>" data-start="<%= airing.start %>" data-end="<%= airing.end %>">
+      <div class="cp-show__time"><%= companion_hour(airing.start) %></div>
+      <div class="cp-show__node" aria-hidden="true"></div>
+
+      <% unless airing.upcoming? %>
+        <button type="button" class="cp-showrow" data-when="aired" data-action="timeline#toggle" aria-expanded="false" aria-controls="cp-segs-<%= airing.id %>">
+          <span class="cp-grow">
+            <span class="cp-show__name"><%= airing.name %></span>
+            <span class="cp-tiny">
+              <% if airing.replayable %>
+                <span data-when="live">On air now</span>
+                <span data-when="past"><%= pluralize(airing.listed_segments.size, "segment") %>, replay any</span>
+              <% else %>
+                Not available for replay
+              <% end %>
+            </span>
+          </span>
+          <%= companion_icon "chevron" %>
+        </button>
+        <div class="cp-segs" id="cp-segs-<%= airing.id %>" data-when="aired" data-nowline-host>
+          <%= render partial: "companion/shared/segment", collection: airing.listed_segments, as: :segment, locals: { airing: airing } %>
+        </div>
+      <% end %>
+
+      <div class="cp-showrow" data-when="future">
+        <span class="cp-grow">
+          <span class="cp-show__name"><%= airing.name %></span>
+          <span class="cp-tiny" data-countdown="<%= airing.start %>" data-far="<%= airing.rundown.present? ? "Rundown: #{airing.rundown}" : "Rundown coming soon" %>"></span>
+        </span>
+        <%= render "companion/shared/bell", airing: airing %>
+      </div>
+    </div>
+  <% end %>
+</div>

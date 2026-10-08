@@ -12,6 +12,18 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  # Listening Companion prototype. /companion is the stream as recorded;
+  # /companion/demo is the sample morning with placeholder related stories.
+  scope "/companion(/:day)", module: "companion", as: "companion", constraints: { day: /demo/ } do
+    get "/", to: "listen#show", as: :listen
+    get "schedule", to: "schedule#index", as: :schedule
+    get "search", to: "search#index", as: :search
+    get "discover", to: "discover#index", as: :discover
+    get "library", to: "library#show", as: :library
+    get "debug", to: "debug#show", as: :debug
+    get "airings/:id/transcript", to: "airings#transcript", as: :airing_transcript
+  end
+
 # WBEZ_BOOTSTRAP_DEMO_ROUTES
 if Rails.env.development?
   get "/demo", to: "demo#index"

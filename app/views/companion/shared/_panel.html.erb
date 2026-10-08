@@ -1,0 +1,49 @@
+<h1 class="cp-panel__title">WBEZ listening companion</h1>
+<p class="cp-panel__lede">
+  <% if @day.key == "demo" %>
+    Sample morning: two real recordings from different days placed back to back, with placeholder Sun-Times stories.
+  <% else %>
+    The stream as recorded on <%= @day.date_label %>, played back as if it were live.
+  <% end %>
+</p>
+
+<div class="cp-panel__row">Clock <b class="cp-panel__clock" data-demo-panel-target="clock"></b></div>
+<div class="cp-panel__row" role="group" aria-label="Clock speed">
+  Speed
+  <% [1, 4, 10].each do |speed| %>
+    <button type="button" class="cp-chip" data-action="demo-panel#speed" data-speed="<%= speed %>" data-demo-panel-target="speed" aria-pressed="false"><%= speed %>×</button>
+  <% end %>
+</div>
+<p class="cp-tiny">Above 1× the clock runs ahead of the audio, so live audio skips forward to keep up.</p>
+
+<h2>Listen tab</h2>
+<div class="cp-panel__row" role="group" aria-label="Listen variant">
+  <%= link_to "A: chevrons", companion_listen_path(listen: "a"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "a" } %>
+  <%= link_to "B: pinch to zoom", companion_listen_path(listen: "b"), class: "cp-chip", data: { demo_panel_target: "variant", variant: "b" } %>
+</div>
+
+<h2>Content</h2>
+<div class="cp-panel__row">
+  <%= link_to "Recorded stream", companion_listen_path(day: nil), class: ["cp-chip", ("is-on" if @day.key == "stream")], data: { turbo: false } %>
+  <%= link_to "Sample content", companion_listen_path(day: "demo"), class: ["cp-chip", ("is-on" if @day.key == "demo")], data: { turbo: false } %>
+</div>
+
+<h2>Try these journeys</h2>
+<% [
+  ["live", companion_listen_path, "Turn it on", "One tap to live. See the show and the segment."],
+  ["search", companion_search_path, "What was that?", "Search a word from earlier and play from that line."],
+  ["timeshift", nil, "Timeshift", "Pause or skip back on live, then go back to live."],
+  ["catchup", companion_listen_path, "Catch me up", "Queue earlier segments. They play through on replay."],
+  ["deeper", nil, "Go deeper", "A Sun-Times card appears as its topic comes up."],
+  ["notify", companion_schedule_path, "Tell me when", "Tap the bell on an upcoming show."],
+  ["zoom", companion_listen_path(listen: "b"), "Variant B", "Pinch through Titles, Notes and Transcript."]
+].each do |id, path, title, text| %>
+  <button type="button" class="cp-try" data-action="demo-panel#journey" data-journey="<%= id %>" data-path="<%= path %>">
+    <b><%= title %></b><span><%= text %></span>
+  </button>
+<% end %>
+
+<h2>Demo controls</h2>
+<button type="button" class="cp-try" data-action="demo-panel#jump"><b>Jump to :58</b><span>Watch the live show hand off to the next one.</span></button>
+<button type="button" class="cp-try" data-action="demo-panel#reset"><b>Reset</b><span>Back to the starting time, nothing playing, queue and saves cleared.</span></button>
+<p class="cp-tiny"><%= link_to "Loader debug page", companion_debug_path, data: { turbo: false } %></p>

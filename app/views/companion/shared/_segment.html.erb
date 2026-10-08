@@ -1,0 +1,25 @@
+<%# One segment row. The timeline controller sets data-state (past, live, next
+    or future) from the demo clock and shows the matching data-when pieces. %>
+<% show_summary = local_assigns.fetch(:summary, false) %>
+<div class="cp-segwrap" data-seg data-seg-id="<%= segment.id %>" data-start="<%= segment.start %>" data-end="<%= segment.end %>">
+  <% if airing.replayable %>
+    <button type="button" class="cp-seg" data-act="seek" data-t="<%= segment.start %>">
+      <span class="cp-seg__time"><%= companion_hm(segment.start) %></span>
+      <span class="cp-seg__name">
+        <span data-when="next">Up next: </span><%= segment.title %>
+        <% if show_summary && segment.summary.present? %><span class="cp-seg__summary" data-when="aired"><%= segment.summary %></span><% end %>
+      </span>
+      <span class="cp-seg__live" data-when="live">Live</span>
+      <span class="cp-miniplay" data-when="past" aria-hidden="true"><%= ferris_icon "play", size: 12 %></span>
+    </button>
+    <button type="button" class="cp-qbtn" data-when="past" data-act="queue" data-t="<%= segment.start %>" data-queue-toggle aria-pressed="false" aria-label="Add <%= segment.title %> to queue">
+      <%= companion_icon "queue" %><%= companion_icon "queued" %>
+    </button>
+  <% else %>
+    <div class="cp-seg cp-seg--static">
+      <span class="cp-seg__time"><%= companion_hm(segment.start) %></span>
+      <span class="cp-seg__name"><span data-when="next">Up next: </span><%= segment.title %></span>
+      <span class="cp-seg__live" data-when="live">Live</span>
+    </div>
+  <% end %>
+</div>

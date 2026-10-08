@@ -102,6 +102,8 @@ Automatic matching will find real pairs only in Morning Edition and In the Loop,
 
 ## Gaps and proposed fixes
 
+Decided after review (Oct 8): use the Sunday block exactly as recorded for the main demo (option A), with a separate sample day at `/companion/demo` for showing related stories. The audio was remuxed to `.m4a`. Say More is left out. Thin related stories are accepted for now.
+
 1. **Show identity.** Write `data/shows.yml` by hand: one entry per audio file with show name, start and end, a replayable flag and artwork colour. Use it to relabel chapters, treating anything not matching the hour's show as a break.
 2. **Which day is "today"?** The plan assumes one broadcast day with a live hour. The continuous block is a Sunday night of syndicated shows, and the local content is in two separate hours. Options:
    - **A. Use the Sunday block as recorded.** Honest and continuous, but little Chicago content and few related stories.

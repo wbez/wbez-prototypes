@@ -1,0 +1,13 @@
+<header class="cp-topbar">
+  <% if local_assigns[:title] %>
+    <h1 class="cp-topbar__title"><%= title %></h1>
+  <% else %>
+    <%= image_tag "logos/wbez-chicago-logo-oneline.svg", alt: "WBEZ Chicago", class: "cp-wordmark" %>
+  <% end %>
+  <div class="cp-topbar__actions">
+    <%= link_to companion_search_path, class: "cp-iconbtn", "aria-label": "Search what you heard" do %><%= ferris_icon "search", size: 22 %><% end %>
+    <% unless local_assigns[:title] %>
+      <button type="button" class="cp-iconbtn" data-act="sheet-open" data-sheet="donate" aria-label="Support WBEZ"><%= ferris_icon "heart", size: 22 %></button>
+    <% end %>
+  </div>
+</header>

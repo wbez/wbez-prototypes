@@ -1,0 +1,105 @@
+<%# Variant B, "pinch to zoom": three levels of detail for the same day.
+    All three are rendered; the pinch-zoom controller switches between them. %>
+<div class="cp-zoom" data-controller="pinch-zoom" data-level="0" data-variant="b">
+  <div class="cp-zind" role="group" aria-label="Detail level. Pinch to change.">
+    <% %w[Titles Notes Transcript].each_with_index do |label, level| %>
+      <button type="button" data-action="pinch-zoom#pick" data-level="<%= level %>" data-pinch-zoom-target="level" aria-pressed="false">
+        <span class="cp-lvdots" aria-hidden="true"><% 3.times do |dot| %><i class="<%= "is-on" if dot <= level %>"></i><% end %></span>
+        <%= label %>
+      </button>
+    <% end %>
+  </div>
+
+  <div class="cp-zwrap" data-pinch-zoom-target="wrap">
+    <%# Level 0: titles %>
+    <div class="cp-zlevel cp-zlevel--0">
+      <% @day.airings.each do |airing| %>
+        <div class="cp-zshow cp-z0<%= " cp-z0--blocked" unless airing.replayable %>" data-show="<%= airing.id %>" data-start="<%= airing.start %>" data-end="<%= airing.end %>">
+          <button type="button" class="cp-zrow" data-action="pinch-zoom#open" data-show="<%= airing.id %>" aria-label="<%= airing.name %>, show notes">
+            <span class="cp-zrow__time"><%= companion_hour(airing.start) %></span>
+            <span class="cp-zrow__name"><%= airing.name %></span>
+            <%= render "zmeta", airing: airing %>
+          </button>
+          <span data-when="future"><%= render "companion/shared/bell", airing: airing %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Level 1: notes and segments %>
+    <div class="cp-zlevel cp-zlevel--1">
+      <% @day.airings.each do |airing| %>
+        <div class="cp-zshow cp-z1" data-show="<%= airing.id %>" data-start="<%= airing.start %>" data-end="<%= airing.end %>">
+          <div class="cp-zhead">
+            <span class="cp-zrow__time"><%= companion_hour(airing.start) %></span>
+            <span class="cp-zhead__name"><%= airing.name %></span>
+            <span data-when="aired"><%= render "zmeta", airing: airing %></span>
+            <span data-when="future"><%= render "companion/shared/bell", airing: airing %></span>
+          </div>
+
+          <div data-when="future">
+            <% if airing.rundown.present? %>
+              <p class="cp-znotes"><%= airing.rundown %></p>
+            <% else %>
+              <p class="cp-znotes cp-znotes--empty">Rundown not yet posted.</p>
+            <% end %>
+          </div>
+
+          <% unless airing.upcoming? %>
+            <div data-when="aired">
+              <p class="cp-znotes"><%= airing.notes %></p>
+              <p class="cp-auto">
+                <%= companion_icon "info" %>
+                <span data-when="live">Notes update as the show airs</span>
+                <span data-when="past">Notes generated from the transcript</span>
+              </p>
+              <% unless airing.replayable %><p class="cp-tiny">Audio isn't available for replay.</p><% end %>
+              <div class="cp-segs" data-nowline-host>
+                <%= render partial: "companion/shared/segment", collection: airing.listed_segments, as: :segment, locals: { airing: airing } %>
+              </div>
+              <% if airing.cards.any? %>
+                <div class="cp-zlinks">
+                  <% airing.cards.each do |card| %>
+                    <%= link_to card.story.url, class: "cp-zlink", target: "_blank", rel: "noopener", title: "Suggested from the Sun-Times", data: { start: card.at, reveal: true } do %>
+                      <%= ferris_icon "news", size: 14 %><span><%= card.story.title %></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% end %>
+              <div class="cp-zfoot">
+                <button type="button" class="cp-zdeep" data-action="pinch-zoom#deep" data-show="<%= airing.id %>"><%= companion_icon "zoom" %>Transcript</button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Level 2: the whole day as one transcript, loaded per show as it scrolls into view %>
+    <div class="cp-zlevel cp-zlevel--2">
+      <% @day.airings.each do |airing| %>
+        <div class="cp-zshow cp-z2" data-show="<%= airing.id %>" data-start="<%= airing.start %>" data-end="<%= airing.end %>">
+          <div class="cp-zhead cp-zhead--sticky">
+            <span class="cp-zrow__time"><%= companion_hour(airing.start) %></span>
+            <span class="cp-zhead__name"><%= airing.name %></span>
+            <span data-when="aired"><%= render "zmeta", airing: airing %></span>
+            <span data-when="future"><%= render "companion/shared/bell", airing: airing %></span>
+          </div>
+          <p class="cp-zph" data-when="future">The transcript appears here as <%= airing.name %> airs.</p>
+          <% unless airing.upcoming? %>
+            <div data-when="aired">
+              <%= turbo_frame_tag "transcript-#{airing.id}", src: companion_airing_transcript_path(id: airing.id), loading: "lazy" do %>
+                <p class="cp-zph">Loading transcript…</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="cp-zhint" data-pinch-zoom-target="hint" hidden>
+    <%= companion_icon "pinch" %>
+    <span>Pinch out on a show to see its notes. Keep going for the transcript.</span>
+    <button type="button" data-action="pinch-zoom#dismissHint" aria-label="Dismiss tip"><%= ferris_icon "times", size: 14 %></button>
+  </div>
+</div>

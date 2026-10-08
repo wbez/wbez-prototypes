@@ -1,0 +1,53 @@
+<% content_for :title, "Companion loaders" %>
+<div class="container py-4">
+  <h1 class="h3">Listening Companion: what the loaders produced</h1>
+  <p class="text-muted">
+    Day <code><%= @day.key %></code> (<%= @day.label %>). Demo clock starts at <%= companion_clock(@day.default_now) %>; recording ends <%= companion_clock(@day.audio_end) %>.
+    Feed snapshot: <code><%= SunTimes.snapshot_path&.basename || "none" %></code>, <%= SunTimes.stories.size %> stories used.
+    <%= link_to "Recorded stream", companion_debug_path(day: nil) %> · <%= link_to "Sample content", companion_debug_path(day: "demo") %> · <%= link_to "Open the app", companion_listen_path %>
+  </p>
+
+  <table class="table table-sm align-middle">
+    <thead><tr><th>Start</th><th>End</th><th>Show</th><th>Replay</th><th>Segments</th><th>Breaks</th><th>Lines</th><th>Stories</th><th>Audio</th></tr></thead>
+    <tbody>
+      <% @day.airings.each do |airing| %>
+        <tr>
+          <td><%= companion_clock(airing.start, with_seconds: true) %></td>
+          <td><%= companion_clock(airing.end, with_seconds: true) %></td>
+          <td><a href="#<%= airing.id %>"><%= airing.name %></a></td>
+          <td><%= airing.replayable ? "yes" : "no" %></td>
+          <td><%= airing.listed_segments.size %></td>
+          <td><%= airing.segments.size - airing.listed_segments.size %></td>
+          <td><%= airing.lines.size %></td>
+          <td><%= airing.cards.size %></td>
+          <td><%= airing.audio_path ? tag.code(airing.audio_path) : "upcoming, no audio" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% @day.recorded.each do |airing| %>
+    <h2 class="h5 mt-5" id="<%= airing.id %>"><%= companion_hour(airing.start) %> <%= airing.name %></h2>
+    <p class="small text-muted"><strong>Notes:</strong> <%= airing.notes %></p>
+    <table class="table table-sm">
+      <thead><tr><th>Time</th><th>Kind</th><th>Segment</th><th>Lines</th><th>Stories shown</th><th>Best candidate (score, shared names)</th></tr></thead>
+      <tbody>
+        <% airing.segments.each do |segment| %>
+          <% best = segment.listed? ? @matcher.candidates(segment).first : nil %>
+          <tr class="<%= "text-muted" unless segment.listed? %>">
+            <td><%= companion_clock(segment.start, with_seconds: true) %></td>
+            <td><%= segment.kind %></td>
+            <td><%= segment.title %><div class="small text-muted"><%= segment.summary %></div></td>
+            <td><%= segment.lines.size %></td>
+            <td>
+              <% segment.cards.each do |card| %>
+                <div class="small"><%= companion_clock(card.at, with_seconds: true) %> <%= link_to card.story.title, card.story.url %></div>
+              <% end %>
+            </td>
+            <td class="small"><% if best %><%= best[:score] %> <%= best[:terms].first(5).join(", ") %><br><%= best[:story].title %><% end %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

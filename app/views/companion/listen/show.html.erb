@@ -1,0 +1,31 @@
+<% content_for :title, "Listen" %>
+
+<%= render "companion/shared/topbar" %>
+
+<% if @day.key == "demo" %>
+  <p class="cp-banner"><%= companion_icon "info" %> Sample content. The related stories marked “Sample” are placeholders.</p>
+<% end %>
+
+<section class="cp-livecard" data-live-card aria-label="On air now">
+  <div class="cp-grow">
+    <div class="cp-livecard__head">
+      <span class="cp-pill cp-pill--dot">Live</span>
+      <b class="cp-livecard__name" data-live-name></b>
+    </div>
+    <div class="cp-small">Now</div>
+    <div class="cp-livecard__seg" data-live-seg></div>
+  </div>
+  <button type="button" class="cp-bigplay cp-bigplay--live" data-act="live-toggle" data-live-label aria-label="Play live">
+    <%= ferris_icon "play", classes: "cp-ico-play", size: 22 %>
+    <%= ferris_icon "pause", classes: "cp-ico-pause", size: 22 %>
+  </button>
+</section>
+
+<div data-queue-card data-limit="3"></div>
+
+<div class="cp-sectionhead">
+  <h2><%= @day.date_label %></h2>
+  <%= link_to "Full schedule", companion_schedule_path, class: "cp-link" %>
+</div>
+
+<%= render "variant_#{@variant}" %>

@@ -1,0 +1,50 @@
+<%= turbo_frame_tag @frame_id do %>
+  <% cards = @airing.cards.group_by(&:at) %>
+  <div class="cp-airing cp-airing--<%= @pane %>" data-controller="transcript"
+       data-transcript-mode-value="<%= @pane %>"
+       data-transcript-start-value="<%= @airing.start %>" data-transcript-end-value="<%= @airing.end %>"
+       data-transcript-replay-value="<%= @airing.replayable %>">
+    <div class="cp-tx" data-transcript-target="scroller">
+      <p class="cp-waiting" data-transcript-target="empty" hidden>The transcript appears here as <%= @airing.name %> airs.</p>
+      <% unless @airing.replayable %><p class="cp-zph">Audio isn't available for replay. Transcript only.</p><% end %>
+
+      <% @airing.segments.each do |segment| %>
+        <% next if segment.lines.empty? %>
+        <h3 class="cp-seghead" data-start="<%= segment.lines.first.start %>"><%= companion_hm(segment.start) %> <%= segment.title %></h3>
+        <% segment.lines.each do |line| %>
+          <button type="button" class="cp-line" data-act="line" data-t="<%= line.start %>" data-start="<%= line.start %>" data-line>
+            <span class="cp-line__text"><%= line.text %></span>
+            <% if @airing.replayable %><span class="cp-line__ts" aria-hidden="true">Play from <%= companion_hm(line.start) %></span><% end %>
+          </button>
+          <% cards.fetch(line.start, []).each do |card| %>
+            <%= render "companion/shared/story_card", card: card %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <div class="cp-nowline" data-transcript-target="now" hidden>
+        <span class="cp-nowline__dot"></span><span class="cp-nowline__lab"></span>
+      </div>
+      <p class="cp-txnote" data-transcript-target="note"></p>
+      <button type="button" class="cp-resume" data-transcript-target="resume" data-action="transcript#resume" hidden>
+        <%= companion_icon "chevron" %><span data-transcript-target="resumeLabel">Resume</span>
+      </button>
+    </div>
+
+    <% if @pane == "player" %>
+      <div class="cp-notes">
+        <% if @airing.notes.present? %>
+          <p class="cp-znotes"><%= @airing.notes %></p>
+          <p class="cp-auto"><%= companion_icon "info" %> Notes generated from the transcript</p>
+        <% end %>
+        <p class="cp-waiting" data-transcript-target="notesEmpty">Related Sun-Times stories show up here as their topics come up.</p>
+        <% @airing.cards.each do |card| %>
+          <div data-start="<%= card.at %>" data-reveal data-note-card>
+            <p class="cp-tiny cp-notes__when">Mentioned at <%= companion_hm(card.at) %></p>
+            <%= render "companion/shared/story_card", card: card, excerpt: true %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

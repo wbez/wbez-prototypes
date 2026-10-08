@@ -1,0 +1,16 @@
+<%# A Sun-Times story suggested for this moment. Opens in a new tab so audio keeps playing. %>
+<% story = card.story %>
+<%= link_to story.url, class: "cp-card", target: "_blank", rel: "noopener", data: { start: card.at, reveal: true } do %>
+  <% if story.image_url.present? %>
+    <%= image_tag story.image_url, class: "cp-card__img", alt: "", loading: "lazy" %>
+  <% else %>
+    <span class="cp-card__img cp-card__img--empty" aria-hidden="true"><%= ferris_icon "news", size: 18 %></span>
+  <% end %>
+  <span class="cp-card__body">
+    <span class="cp-card__kicker">Suggested from the Sun-Times<%= " · Sample" if story.sample? %></span>
+    <span class="cp-card__title"><%= story.title %></span>
+    <% if local_assigns[:excerpt] && story.excerpt.present? %><span class="cp-card__excerpt"><%= story.excerpt %></span><% end %>
+  </span>
+  <%= companion_icon "out" %>
+  <span class="visually-hidden">(opens in a new tab)</span>
+<% end %>

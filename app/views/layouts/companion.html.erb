@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for?(:title) ? "#{yield(:title)} · WBEZ" : "WBEZ Listening Companion" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="wbez-app-prototype wbez-app-prototype--companion">
+    <div class="cp-wrap">
+      <div class="cp-phone">
+        <main class="cp-screen" id="cp-screen" data-controller="timeline">
+          <%= yield %>
+        </main>
+
+        <%# Audio, mini player, Now Playing and sheets survive Turbo visits, so
+            audio keeps playing when you switch tabs. %>
+        <div id="cp-root-<%= @day.key %>" class="cp-root" data-turbo-permanent
+             data-controller="clock player store sheet toast"
+             data-player-transcript-url-value="<%= companion_airing_transcript_path(id: "__ID__", pane: "player") %>">
+          <script type="application/json" data-companion-day><%= raw json_escape(@day.as_client_json.to_json) %></script>
+          <%= render "companion/shared/player" %>
+        </div>
+
+        <nav class="cp-tabbar" aria-label="Primary">
+          <% companion_tabs.each do |tab| %>
+            <% active = tab[:id] == @active_tab %>
+            <%= link_to tab[:href], class: ["cp-tab", ("is-on" if active)], "aria-current": (active ? "page" : nil) do %>
+              <%= companion_icon tab[:id] %>
+              <span><%= tab[:label] %></span>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+
+      <aside id="cp-panel-<%= @day.key %>" class="cp-panel" data-turbo-permanent data-controller="demo-panel" aria-label="Demo controls">
+        <%= render "companion/shared/panel" %>
+      </aside>
+    </div>
+  </body>
+</html>

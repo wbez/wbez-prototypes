@@ -1,0 +1,105 @@
+<%# Everything in here lives in the permanent root: it is rendered once and
+    then driven by the player, store, sheet and toast controllers. %>
+<audio data-player-target="audio" preload="none"></audio>
+
+<div class="cp-mini" data-player-target="mini" hidden>
+  <button type="button" class="cp-mini__open" data-act="open" aria-label="Open player">
+    <span class="cp-art" data-player-target="miniArt" aria-hidden="true"></span>
+    <span class="cp-grow">
+      <span class="cp-mini__t1" data-player-target="miniTitle"></span>
+      <span class="cp-mini__t2" data-player-target="miniSub"></span>
+    </span>
+  </button>
+  <button type="button" class="cp-qbadge" data-act="openqueue" data-store-target="badge" hidden>
+    <%= companion_icon "queue" %>
+    <span data-store-target="badgeCount"></span>
+  </button>
+  <button type="button" class="cp-bigplay cp-bigplay--sm" data-act="toggle" data-play-label aria-label="Play">
+    <%= ferris_icon "play", classes: "cp-ico-play", size: 18 %>
+    <%= ferris_icon "pause", classes: "cp-ico-pause", size: 18 %>
+  </button>
+</div>
+
+<section class="cp-player" data-player-target="sheet" aria-label="Now playing" inert>
+  <div class="cp-grab" aria-hidden="true"></div>
+  <div class="cp-phead">
+    <button type="button" class="cp-iconbtn" data-act="close" aria-label="Close player"><%= companion_icon "chevron" %></button>
+    <h1>Now playing</h1>
+  </div>
+
+  <div class="cp-pinfo">
+    <span class="cp-art cp-art--lg" data-player-target="art" aria-hidden="true"></span>
+    <div class="cp-grow">
+      <div class="cp-pinfo__t1" data-player-target="title"></div>
+      <div class="cp-pinfo__t2" data-player-target="segment"></div>
+      <span class="cp-pill" data-player-target="pill"></span>
+    </div>
+  </div>
+
+  <div class="cp-ptabs" role="tablist" aria-label="Now playing sections">
+    <% [["transcript", "Transcript"], ["notes", "Notes & links"], ["next", "Up next"]].each do |id, label| %>
+      <button type="button" class="cp-ptab" role="tab" data-act="ptab" data-id="<%= id %>" data-player-target="tab" aria-selected="false"><%= label %></button>
+    <% end %>
+  </div>
+
+  <div class="cp-pbody" data-player-target="body" data-tab="transcript">
+    <turbo-frame id="cp-player-airing" data-player-target="frame">
+      <p class="cp-waiting">Press play to follow along.</p>
+    </turbo-frame>
+    <div class="cp-pane cp-pane--next" data-player-target="next"></div>
+  </div>
+
+  <div class="cp-controls">
+    <div class="cp-barrow">
+      <span data-player-target="barStart"></span>
+      <span class="cp-pill cp-pill--dot" data-player-target="livePill">Live</span>
+      <button type="button" class="cp-backlive" data-act="live" data-player-target="backLive" hidden>Back to live</button>
+      <span data-player-target="barEnd"></span>
+    </div>
+    <div class="cp-bar" data-act="bar" data-player-target="bar" role="slider" tabindex="0"
+         aria-label="Position in show" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="cp-bar__track"></div>
+      <div class="cp-bar__aired" data-player-target="aired"></div>
+      <div class="cp-bar__fill" data-player-target="fill"></div>
+      <div class="cp-bar__edge" data-player-target="edge" hidden></div>
+      <div class="cp-bar__knob" data-player-target="knob"></div>
+    </div>
+    <div class="cp-barrow cp-barrow--sub">
+      <span data-player-target="position"></span>
+      <span class="cp-nowlabel" data-player-target="nowLabel"></span>
+      <span></span>
+    </div>
+    <div class="cp-btnrow">
+      <button type="button" class="cp-side" data-act="clip"><%= companion_icon "share" %><span>Clip</span></button>
+      <button type="button" class="cp-skip" data-act="skip" data-d="-10" aria-label="Back 10 seconds">10</button>
+      <button type="button" class="cp-pp" data-act="toggle" data-play-label aria-label="Play">
+        <%= ferris_icon "play", classes: "cp-ico-play", size: 24 %>
+        <%= ferris_icon "pause", classes: "cp-ico-pause", size: 24 %>
+      </button>
+      <button type="button" class="cp-skip" data-act="skip" data-d="10" data-player-target="forward" aria-label="Forward 10 seconds">10</button>
+      <button type="button" class="cp-side" data-act="savecur"><%= companion_icon "save" %><span>Save</span></button>
+    </div>
+  </div>
+
+  <div class="cp-pfoot">
+    <button type="button" data-player-target="previous" data-act="seekopen"></button>
+    <button type="button" class="cp-pfoot__r" data-player-target="upcoming" data-act="ptab" data-id="next"></button>
+  </div>
+</section>
+
+<div class="cp-scrim" data-sheet-target="scrim" data-act="sheet-close"></div>
+<div class="cp-sheet" id="cp-sheet-donate" role="dialog" aria-modal="true" aria-labelledby="cp-sheet-donate-title" data-sheet-target="sheet" inert>
+  <div class="cp-grab" aria-hidden="true"></div>
+  <h2 id="cp-sheet-donate-title">Support WBEZ</h2>
+  <p>Placeholder for the membership moment. In this concept Donate leaves the tab bar and shows up here, plus in contextual moments such as after a listening streak or during a pledge drive.</p>
+  <p class="cp-tiny">Needs membership team input before we commit.</p>
+  <button type="button" class="btn btn-wbez w-100" data-act="sheet-close">Got it</button>
+</div>
+
+<div class="cp-toast" role="status" aria-live="polite" data-toast-target="message"></div>
+
+<%# Icons for markup the controllers build in the browser. %>
+<template data-icon="times"><%= ferris_icon "times", size: 14 %></template>
+<template data-icon="play"><%= ferris_icon "play", size: 12 %></template>
+<template data-icon="bell"><%= companion_icon "bell" %></template>
+<template data-icon="queue"><%= companion_icon "queue" %></template>

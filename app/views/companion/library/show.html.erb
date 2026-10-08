@@ -1,0 +1,18 @@
+<% content_for :title, "Library" %>
+
+<%= render "companion/shared/topbar", title: "Library" %>
+
+<%# Everything here is kept in this browser's localStorage and drawn by the store controller. %>
+<div class="cp-pad">
+  <h2 class="cp-h2">Your queue</h2>
+</div>
+<div data-queue-card data-limit="0" data-empty="Nothing queued. Use the queue button next to any segment."></div>
+
+<div class="cp-pad">
+  <h2 class="cp-h2">Saved moments</h2>
+  <div data-saved-list data-empty="Nothing saved yet. Tap Save in the player to keep a moment with its transcript line."></div>
+
+  <h2 class="cp-h2">Following</h2>
+  <div data-follow-list data-podcasts="<%= @podcasts.to_json %>" data-empty="You aren't following any shows. Find some in Discover."></div>
+  <p class="cp-tiny">Auto-downloads use Wi-Fi only, up to 2 GB. (Prototype setting.)</p>
+</div>

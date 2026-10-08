@@ -1,0 +1,5 @@
+<span class="cp-zmeta">
+  <span class="cp-pill cp-pill--dot" data-when="live">Live</span>
+  <span class="cp-tiny" data-when="past"><%= airing.replayable ? pluralize(airing.listed_segments.size, "segment") : "Transcript only" %></span>
+  <span class="cp-tiny" data-when="future" data-countdown="<%= airing.start %>" data-countdown-short data-far=""></span>
+</span>
